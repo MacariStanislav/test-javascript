@@ -1,59 +1,34 @@
-const navbar = document.querySelector('.navbar');
+const $cursor = document.querySelector('#cursor');
 
+// Скрываем курсор по умолчанию
+gsap.set($cursor, { opacity: 0 });
 
-navbar.addEventListener('mousemove', (event) => {
-  const rect = navbar.getBoundingClientRect();
-  const x = event.clientX - rect.left;
-  const y = event.clientY - rect.top;
+// Флаг для отслеживания первого входа
+let cursorActivated = false;
 
-
-  navbar.style.setProperty('--x', `${x}px`);
-  navbar.style.setProperty('--y', `${y}px`);
+// Обработчик движения мыши
+document.addEventListener('mousemove', (e) => {
+  if (!cursorActivated) {
+    cursorActivated = true;
+    gsap.to($cursor, { opacity: 1, duration: 0.2 }); // Показываем курсор только при первом движении
+  }
+  
+  gsap.to($cursor, {
+    duration: 0.1,
+    x: e.clientX - 15,
+    y: e.clientY - 15,
+    ease: "power1.out",
+  });
 });
 
-// Добавляем обработчик для появления кольца при наведении мыши на navbar
-navbar.addEventListener('mouseenter', () => {
-  navbar.style.setProperty('--show-ring', 'visible');
+// Скрываем курсор при уходе мыши за пределы окна
+document.addEventListener('mouseleave', () => {
+  gsap.to($cursor, { opacity: 0, duration: 0.2 });
 });
 
-// Добавляем обработчик для скрытия кольца, когда мышь покидает navbar
-navbar.addEventListener('mouseleave', () => {
-  navbar.style.setProperty('--show-ring', 'hidden');
-});
-
-
-
-let lastParticleTime = 0;
-const particleDelay = 80; // Задержка в миллисекундах
-
-document.addEventListener('mousemove', (event) => {
-  const currentTime = new Date().getTime();
-
- 
-  if (currentTime - lastParticleTime > particleDelay) {
-    createParticle(event.pageX, event.pageY);
-    lastParticleTime = currentTime; 
+// Показываем снова, когда мышь вернулась
+document.addEventListener('mouseenter', () => {
+  if (cursorActivated) {
+    gsap.to($cursor, { opacity: 1, duration: 0.2 });
   }
 });
-
-function createParticle(x, y) {
-  const container = document.querySelector('.particle-container');
-  const particle = document.createElement('div');
-  
- 
-  const number = Math.random() < 0.5 ? '0' : '1';
-  particle.classList.add('particle');
-  particle.textContent = number;
-  
-  
-  particle.style.left = `${x}px`;
-  particle.style.top = `${y}px`;
-  
-
-  container.appendChild(particle);
-  
- 
-  setTimeout(() => {
-    particle.remove();
-  }, 500); 
-}
