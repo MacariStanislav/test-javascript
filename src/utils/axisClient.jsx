@@ -25,7 +25,7 @@ api.interceptors/*<-перехватчик*/.request.use(
   }
 );
 
-//  перехватчик для обработки ерора
+//  перехватчик для ответов в данном случае ерора
 api.interceptors.response.use(
   (response) => {
     return response;
@@ -45,3 +45,18 @@ api.interceptors.response.use(
 );
 
 export default api;
+
+
+
+// const myInterceptor = axios.interceptors.request.use(function () {
+//     console.log('Перехватчик работает');
+//   });
+  
+//   // Удаляем перехватчик
+//   axios.interceptors.request.eject(myInterceptor);
+
+
+// error.response — для ошибок с кодами состояния за пределами диапазона 2xx.
+// error.request — для случаев, когда запрос был выполнен, но ответ не был получен.
+// error.message — для ошибок, произошедших при настройке запроса.
+// validateStatus — позволяет настроить, какие коды состояния должны рассматриваться как успешные или ошибочные.
